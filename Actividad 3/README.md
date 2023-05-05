@@ -25,5 +25,5 @@
 ## TST Proyecto 1 Grupo 1 - Test Analogos - ##
 [![Test LCD ESP32](https://img.youtube.com/vi/13HDC6nj4kQ/0.jpg)](https://www.youtube.com/watch?v=13HDC6nj4kQ)
 
-Simulacion en WOWKI Temp Casa
+Simulacion en WOWKI Temp Casa 
 https://wokwi.com/projects/363108771392686081
