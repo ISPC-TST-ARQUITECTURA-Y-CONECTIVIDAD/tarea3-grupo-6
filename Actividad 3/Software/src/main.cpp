@@ -78,8 +78,17 @@ DHTesp dhtHabitacion3;
 */
 void callback(char *topic, byte *payload, unsigned int length)
 {
-
+/*
+  if ((char)payload[4] == 'c' && (digitalRead(Led_Estado) == 1))
+  {
+    Serial.println(RX);
+    RX = "";
+    //Cierre_Pulso();
+    Cierre_Sostenido();
+    Recibo_Comando();
+  }*/
 }
+
 
 void reconnect()
 {
@@ -214,7 +223,7 @@ void loop()
 
   }
 
-delay(3000);
+delay(1200);
    //SENSOR 2
   LCD.clear();
   LCD.setCursor(0, 0);
