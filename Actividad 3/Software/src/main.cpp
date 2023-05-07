@@ -11,7 +11,7 @@ const char* ssid = "TP-LINK_B33E";
 const char* password = "50868155";
 const char *mqtt_server = "tstproyecto1grupo6.ddns.net";// dns del broker mosquitto (MQTT)
 unsigned int mqtt_port = 1883;                      // socket port del server MQTT Mosquitto
-const char *Topico = "/actividad3/";                // topico para publicar los datos en el server
+const char *topico = "/actividad3/casa/";                // topico para publicar los datos en el server
 
 
 //declaramos pines
@@ -23,7 +23,10 @@ const int pote1 = 36; // potenciometro para setear sensor 1
 const int pote2 = 34; // potenciometro para setear sensor 2
 const int pote3 = 39; // potenciometro para setear sensor 3
 */
-float
+int pote1 = 16;
+int pote2 = 16;
+int pote3 = 16;
+String rx = "";
 
 
 const int canal1 = 23; // PWM 1
@@ -63,42 +66,71 @@ DHTesp dhtHabitacion1;
 DHTesp dhtHabitacion2;
 DHTesp dhtHabitacion3;
 
-/*funcion del controlador PI
 
-   RECIBE POR REFERENCIA:
-   - sensor: cada sensor de temperatura
-   - errorPasH: la suma de errores anteriores para cada sensor
 
-   RECIBE POR VALOR:
-   - LCD_row: fila del LCD donde se mostrara la temperatura, tambien sirve para identificar el sensor
-   - temp_set: temperatura seteada por el usuario con el potenciometro
-   - Kp: constante proporcional
-   - Ki: constante integral
-   - TiempoMuestreo: tiempo de muestreo en miliseg
-*/
-void callback(char *topic, byte *payload, unsigned int length)
+//------------------------------------------------------------------------------------
+void Suscribe_MQTT()
 {
-/*
-  if ((char)payload[4] == 'c' && (digitalRead(Led_Estado) == 1))
+  grupo6.subscribe("/actividad3/casa/");
+}
+//------------------------------------------------------------------------------------
+void Reconectar_MQTT()
+{
+  while (!grupo6.connected())
   {
-    Serial.println(RX);
-    RX = "";
-    //Cierre_Pulso();
-    Cierre_Sostenido();
-    Recibo_Comando();
-  }*/
-}
+    String clientId = "TSTGrupo6";
+    clientId += String(random(0xffff), HEX);
+    if (grupo6.connect(clientId.c_str()))
+    {
 
-
-void reconnect()
-{
-    while (!grupo6.connected()){                    // si la conexion esta negada reconecto
-        String clientId = "Proyecto1Grupo6";        // genero el usuario
-        clientId += String(random(0xffff), HEX);    // genero parte del usuario random
-        if (grupo6.connect(clientId.c_str())){}     // conecto con el cliente mas random
-        delay(5000);                                // demora de la conexion
+      Serial.println("Coneccion exitosa a Broker MQTT");
+      Suscribe_MQTT();
     }
+    else
+    {
+      Serial.println("Falla en el estado de conexion");
+      Serial.println(grupo6.state());
+      Serial.println("Reintentando en 5 segundos");
+      delay(4000);
+    }
+  }
 }
+
+
+//------------------------------------------------------------------------------------
+// Libreria de funciones Callback
+//------------------------------------------------------------------------------------
+void callback(char *topic, byte *payload, unsigned int length)
+{ for (int i = 0; i < 3; i++)
+  {
+    rx +=(char)payload[i];
+  }
+    pote1 = rx.toInt();
+    rx="";
+}
+//------------------------------------------------------------------------------------
+// Libreria de funciones Reconexion
+//------------------------------------------------------------------------------------
+void Conectar_MQTT()
+{
+  Serial.println("Conectando a Broker MQTT");
+  grupo6.setServer(mqtt_server, 1883);
+  Suscribe_MQTT();
+  grupo6.setCallback(callback);
+}
+//------------------------------------------------------------------------------------
+void Revisar_conexion_MQTT()
+{
+  if (!grupo6.connected())
+  {
+    Reconectar_MQTT();
+  }
+  grupo6.loop();
+}
+
+
+
+
 float PI_Controller(DHTesp &sensor, int LCD_row, float &temp_set, float Kp, float Ki, int TiempoMuestreo, double &errorPasH)
 {
   double errorH;                      // error actual
@@ -129,23 +161,17 @@ void setup()
 {
   Serial.begin(9600);
   WiFi.begin(ssid, password);                     // conecto al wifi del lugar (micasa)
-
-     while (WiFi.status() != WL_CONNECTED)          // inicio conexion
-      {   
-          delay(1500);                              // demora para reintentar
-          digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-      }
- 
-
+  delay(2000);
+  Conectar_MQTT();
   tiempo.begin();                             // inicializo el objeto del servidor de fecha y hora
   LCD.begin(20,4);
-   
+ 
   // declaro senseores
   dhtHabitacion1.setup(DHT_Hab1, DHTesp::DHT11);
   dhtHabitacion2.setup(DHT_Hab2, DHTesp::DHT11);
   dhtHabitacion3.setup(DHT_Hab3, DHTesp::DHT11);
-  grupo6.setServer(mqtt_server, mqtt_port);       // estableco conexion al server mwtt (ISPC)
   delay(2000);
+
   
 }
 
@@ -160,7 +186,7 @@ void loop()
   LCD.setCursor(0, 0);
   LCD.print("Habitacion 1");
   //int valuPote1 = analogRead(pote1);                                       // lectura del potenciometro
-  float ref1 = map(valuPote1, 0, 4096, 0, 35); //mapeo el potenciometro en rando de 16 a 30
+  float ref1 = pote1;// map(pote1, 0, 40, 0, 40); //mapeo el potenciometro en rando de 16 a 30
   LCD.setCursor(0, 2);
   LCD.print("Temp Set " + String(ref1));
  
@@ -223,13 +249,14 @@ void loop()
 
   }
 
-delay(1200);
+delay(1000);
+/*
    //SENSOR 2
   LCD.clear();
   LCD.setCursor(0, 0);
   LCD.print("Habitacion 2");
-  int valuPote2 = analogRead(pote2);
-  float ref2 = map(valuPote2, 0, 4096, 16, 30);
+  //int valuPote2 = analogRead(pote2);
+  float ref2 = map(pote2, 0, 4096, 16, 30);
   LCD.setCursor(0, 2);
   LCD.print("Temp Set " + String(ref2));
   U2 = PI_Controller(dhtHabitacion2, 1, ref2, 2, 2, TiempoMuestreo, errorPasH_2);
@@ -259,8 +286,8 @@ delay(1200);
   LCD.clear();
   LCD.setCursor(0, 0);
   LCD.print("Habitacion 3");
-  int valuPote3 = analogRead(pote3);
-  float ref3 = map(valuPote3, 0, 4096, 16, 30);
+  //int valuPote3 = analogRead(pote3);
+  float ref3 = map(pote3, 0, 4096, 16, 30);
   LCD.setCursor(0, 2);
   LCD.print("Temp Set " + String(ref3));
   U3 = PI_Controller(dhtHabitacion3, 1, ref3, 10, 10, TiempoMuestreo, errorPasH_3);
@@ -285,7 +312,8 @@ delay(1200);
     LCD.print("%");    
   }
   Serial.println("---------------------------------");
-         if (!grupo6.connected())                     // si la conexion esta negada reconecto
-        reconnect();
-        delay(5000);
+  */
+         //if (!grupo6.connected())                     // si la conexion esta negada reconecto
+        Revisar_conexion_MQTT();
+        //delay(5000);
 }
