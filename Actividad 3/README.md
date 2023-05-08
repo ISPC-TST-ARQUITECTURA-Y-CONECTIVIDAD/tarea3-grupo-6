@@ -18,6 +18,7 @@
 
 
 ## Acceso ONLINE a dashboard NODERED en servidor ## 
+* Demostracion de funcionamiento del dashboar en linea
 
 [![Dashboard](https://github.com/ISPC-TST-ARQUITECTURA-Y-CONECTIVIDAD/tarea3-grupo-6/blob/Mario/Actividad%203/Dashboard/Screenshot_20230508-132220.jpg)](http://tstproyecto1grupo6.ddns.net:3333/ui/)
 
