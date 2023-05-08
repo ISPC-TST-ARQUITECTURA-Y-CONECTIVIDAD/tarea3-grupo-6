@@ -16,6 +16,12 @@
 
 [![Video demostracion](https://img.youtube.com/vi/uwhacIJPKPQ/0.jpg)](https://www.youtube.com/watch?v=uwhacIJPKPQ)
 
+
+## Acceso ONLINE a dashboard NODERED en servidor ## 
+
+[![Dashboard](https://tstproyecto1grupo6.ddns.net:3333/ui/)
+
+
 ## Video Dashboard APP Android ## 
 
 [![Video demostracion](https://img.youtube.com/vi/bFwe1QHWEKk/0.jpg)](https://www.youtube.com/watch?v=bFwe1QHWEKk)
