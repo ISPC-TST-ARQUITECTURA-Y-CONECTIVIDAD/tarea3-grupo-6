@@ -18,16 +18,11 @@ const char *topico = "/actividad3/casa/";                // topico para publicar
 const int DHT_Hab1 = 0; //sensor 1
 const int DHT_Hab2 = 4; //sensor 2
 const int DHT_Hab3 = 15; //sensor 3
-/*
-const int pote1 = 36; // potenciometro para setear sensor 1
-const int pote2 = 34; // potenciometro para setear sensor 2
-const int pote3 = 39; // potenciometro para setear sensor 3
-*/
+
 int pote1 = 16;
 int pote2 = 16;
 int pote3 = 16;
 String rx = "";
-
 
 const int canal1 = 23; // PWM 1
 const int canal2 = 22; // PWM 2
@@ -130,6 +125,7 @@ void Revisar_conexion_MQTT()
 //------------------------------------------------------------------------------------
 void publicaCocina(){
     TempAndHumidity  data = dhtHabitacion1.getTempAndHumidity();
+    
     cocina = data.temperature;               // adquirimos temperatura del DHT11
     String cocina_2 = String(cocina,2);                      // Convierto el float a string
     int str_len4 = cocina_2.length() + 1;               // cargo el largo del float a una variable
@@ -147,6 +143,7 @@ void publicaCocina(){
     grupo6.publish("/actividad3/cocina/setpoint/", cocina_1);     // publico en el broker el topico y el arreglo 
     delay(100);
 
+    
     cocina = ciclo1;               // adquirimos temperatura del DHT11
     cocina_2 = String(cocina,2);                      // Convierto el float a string
     str_len4 = cocina_2.length() + 1;               // cargo el largo del float a una variable
@@ -156,10 +153,6 @@ void publicaCocina(){
     delay(100);
 }
 
-
-
-
-
 float PI_Controller(DHTesp &sensor, int LCD_row, float &temp_set, float Kp, float Ki, int TiempoMuestreo, double &errorPasH)
 {
   double errorH;                      // error actual
@@ -168,7 +161,6 @@ float PI_Controller(DHTesp &sensor, int LCD_row, float &temp_set, float Kp, floa
   int CambioTiempo = ahora - pasado;  // dif de tiempo actual - pasado
   if (CambioTiempo >= TiempoMuestreo) // si el tiempo de muestreo se cumple
   {
-    
     errorH = temp_set - data.temperature;                         // calculo error actual
     errorPasH = errorH * TiempoMuestreo + errorPasH; // suma acumulativa de error
     H = ((Kp * errorH) + (Ki * errorPasH));          // calculo de la señal de control
@@ -224,7 +216,6 @@ void loop()
     analogWrite(canal1, U1); //"Actua calefaccion"
     publicaCocina();
   }
-
   else // si la señal de control es menor a 0 necesito refrigeracion
   {
     LCD.setCursor(0, 3);
