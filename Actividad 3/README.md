@@ -18,9 +18,17 @@
 
 
 ## Acceso ONLINE a dashboard NODERED en servidor ## 
-* Demostracion de funcionamiento del dashboar en linea
+* Demostracion de funcionamiento del dashboard en linea
 
 [![Dashboard](https://github.com/ISPC-TST-ARQUITECTURA-Y-CONECTIVIDAD/tarea3-grupo-6/blob/Mario/Actividad%203/Dashboard/Screenshot_20230508-132220.jpg)](http://tstproyecto1grupo6.ddns.net:3333/ui/)
+
+
+## Datos para acceso y trabajo  ## 
+* Servidor broker : tstproyecto1grupo6.ddns.met:1883
+* Servidor dashboard : tstproyecto1grupo6.ddns.net:3333
+* Usuario : tstgrupo1
+* Password : tstgrupo1
+* Dashboard publico : tstproyecto1grupo6.ddns.net:3333/ui/
 
 
 

@@ -7,13 +7,8 @@
 #include <LiquidCrystal.h>
 
 
-//const char* ssid = "TP-LINK_B33E";
-//const char* password = "50868155";
-const char* ssid = "MGAlarmas";
-const char* password = "mgalarmas3040";
-
-
-
+const char* ssid = "TP-LINK_B33E";
+const char* password = "50868155";
 
 
 const char *mqtt_server = "tstproyecto1grupo6.ddns.net";// dns del broker mosquitto (MQTT)
