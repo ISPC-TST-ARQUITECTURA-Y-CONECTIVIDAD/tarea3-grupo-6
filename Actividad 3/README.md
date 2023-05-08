@@ -19,7 +19,7 @@
 
 ## Acceso ONLINE a dashboard NODERED en servidor ## 
 
-[![Dashboard](https://tstproyecto1grupo6.ddns.net:3333/ui/)
+[Dashboard](https://tstproyecto1grupo6.ddns.net:3333/ui/)
 
 
 ## Video Dashboard APP Android ## 
