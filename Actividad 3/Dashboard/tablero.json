@@ -1,0 +1,381 @@
+[
+    {
+        "id": "3e463bde7a004711",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8cac5b67501415b2",
+        "type": "mqtt in",
+        "z": "3e463bde7a004711",
+        "name": "",
+        "topic": "/actividad3/cocina/temperatura/",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "b937d3891a03a673",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "752e998bcf710e93",
+                "40414660bb25bca7"
+            ]
+        ]
+    },
+    {
+        "id": "389d2587e0435913",
+        "type": "mqtt in",
+        "z": "3e463bde7a004711",
+        "name": "",
+        "topic": "/actividad3/cocina/pwm/",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "b937d3891a03a673",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 260,
+        "wires": [
+            [
+                "978b9edac742e739",
+                "aee3198bce8bb8b6"
+            ]
+        ]
+    },
+    {
+        "id": "752e998bcf710e93",
+        "type": "ui_gauge",
+        "z": "3e463bde7a004711",
+        "name": "Temperatura",
+        "group": "ea63dde1a28b3e29",
+        "order": 1,
+        "width": 6,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Temperatura actual",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "40",
+        "colors": [
+            "#0300b3",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 470,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "a1f1b34b5a56d571",
+        "type": "ui_chart",
+        "z": "3e463bde7a004711",
+        "name": "",
+        "group": "ea63dde1a28b3e29",
+        "order": 2,
+        "width": 6,
+        "height": 4,
+        "label": "Temperatura (V) +  SetPoint (N)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "40",
+        "removeOlder": "5",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#ff7f0e",
+            "#2ca02c",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 690,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "95c99343ca3a1af5",
+        "type": "ui_numeric",
+        "z": "3e463bde7a004711",
+        "name": "",
+        "label": "Ajuste SetPoint",
+        "tooltip": "",
+        "group": "ea63dde1a28b3e29",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": false,
+        "topic": "payload",
+        "topicType": "msg",
+        "format": "{{value}} °C",
+        "min": "0",
+        "max": "40",
+        "step": "1",
+        "className": "",
+        "x": 480,
+        "y": 380,
+        "wires": [
+            [
+                "77ef0e92fcc5172c"
+            ]
+        ]
+    },
+    {
+        "id": "978b9edac742e739",
+        "type": "ui_chart",
+        "z": "3e463bde7a004711",
+        "name": "",
+        "group": "ea63dde1a28b3e29",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "label": "Potencia actuador",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 450,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "77ef0e92fcc5172c",
+        "type": "mqtt out",
+        "z": "3e463bde7a004711",
+        "name": "Ajuste de setpoint",
+        "topic": "/actividad3/casa/",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b937d3891a03a673",
+        "x": 690,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "ce5615cf96e47470",
+        "type": "mqtt in",
+        "z": "3e463bde7a004711",
+        "name": "",
+        "topic": "/actividad3/cocina/setpoint/",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "b937d3891a03a673",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 200,
+        "wires": [
+            [
+                "cf51a2d0f17cac1a"
+            ]
+        ]
+    },
+    {
+        "id": "aee3198bce8bb8b6",
+        "type": "ui_text",
+        "z": "3e463bde7a004711",
+        "group": "ea63dde1a28b3e29",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Actuador = ",
+        "format": "{{msg.payload}} %",
+        "layout": "row-spread",
+        "className": "",
+        "x": 430,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "40414660bb25bca7",
+        "type": "function",
+        "z": "3e463bde7a004711",
+        "name": "",
+        "func": "msg.topic='line1';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 140,
+        "wires": [
+            [
+                "a1f1b34b5a56d571"
+            ]
+        ]
+    },
+    {
+        "id": "cf51a2d0f17cac1a",
+        "type": "function",
+        "z": "3e463bde7a004711",
+        "name": "",
+        "func": "    \n    var msg1 = {};\n    msg1.payload=msg.payload;\n    msg1.topic='line2';\n    return msg1;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 200,
+        "wires": [
+            [
+                "a1f1b34b5a56d571"
+            ]
+        ]
+    },
+    {
+        "id": "80c67fe408d667e3",
+        "type": "ui_template",
+        "z": "3e463bde7a004711",
+        "group": "fbb3948a9edf9592",
+        "name": "Classes para tanque",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "format": "<style type=\"text/css\">\n\n    .marco{\n        background-color: transparent;\n        border: 1px solid transparent;\n        user-select: none;\n    \n    }\n    .tanque {\n        background-color: transparent;\n        width: 300px;\n        height: 100px;\n/*      margin-top: 5px;\n        margin-left: 20px;\n        font-size: 14px;\n        padding: 0px, 0px, 0px, 0px;*/\n        align-items: center;\n        user-select: none;\n        border: 1px solid transparent;\n        border-radius: 5px;\n        justify-content: space-around;\n        text-align: center;\n        color: black;\n        text: black;\n    }\n\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 660,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b937d3891a03a673",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "tstproyecto1grupo6.ddns.net",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ea63dde1a28b3e29",
+        "type": "ui_group",
+        "name": "Cocina",
+        "tab": "7b9ce111a194937b",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "fbb3948a9edf9592",
+        "type": "ui_group",
+        "name": "Fecha",
+        "tab": "1614b5ca46af7a11",
+        "order": 1,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7b9ce111a194937b",
+        "type": "ui_tab",
+        "name": "Sistema de control PI - TSTGrupo 6",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "1614b5ca46af7a11",
+        "type": "ui_tab",
+        "d": true,
+        "name": "Casa-IOT",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]

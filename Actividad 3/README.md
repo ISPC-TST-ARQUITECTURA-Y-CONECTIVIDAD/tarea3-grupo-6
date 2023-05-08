@@ -12,5 +12,19 @@
 
 
 
-## video dasboard APP android ##
-[![Alt text](https://img.youtube.com/vi/bFwe1QHWEKk/0.jpg)](https://www.youtube.com/watch?v=bFwe1QHWEKk)
+## Video Demo ##
+* Demostracion de funcionamiento del prototipo para el sistema de control domestico 
+
+[![Video demostracion](https://img.youtube.com/vi/uwhacIJPKPQ/0.jpg)](https://www.youtube.com/watch?v=uwhacIJPKPQ)
+
+
+## Acceso ONLINE a dashboard NODERED en servidor ## 
+* Demostracion de funcionamiento del dashboar en linea
+
+[![Dashboard](https://github.com/ISPC-TST-ARQUITECTURA-Y-CONECTIVIDAD/tarea3-grupo-6/blob/Mario/Actividad%203/Dashboard/Screenshot_20230508-132220.jpg)](http://tstproyecto1grupo6.ddns.net:3333/ui/)
+
+
+
+## Video Dashboard APP Android ## 
+
+[![Video demostracion](https://img.youtube.com/vi/bFwe1QHWEKk/0.jpg)](https://www.youtube.com/watch?v=bFwe1QHWEKk)
