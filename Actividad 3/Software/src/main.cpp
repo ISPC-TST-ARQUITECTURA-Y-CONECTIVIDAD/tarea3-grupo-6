@@ -43,7 +43,7 @@ double errorPasH_3 = 0; // suma de errores anteriores para el controlador 3
 float U1, U2, U3;       // señal de control para los actuadores
 int Kp = 7;             // constante proporcional
 int Ki = 3;             // constante integral
-float H; 
+float H, ref1, ref2, ref3; 
 
 int TiempoMuestreo = 1;   // tiempo de muestreo en miliseg
 unsigned long pasado = 0; // tiempo pasado para asegurar el tiempo de muestreo
@@ -58,21 +58,19 @@ PubSubClient grupo6(esp32_Client);                        // creacion de objeto 
 WiFiUDP ntpUDP;                                           // obejto udp para la hora
 NTPClient tiempo(ntpUDP, "ntp.ign.gob.ar", -10800, 8000); //objeto del server Hora
 
-
-
-
-
 DHTesp dhtHabitacion1;
 DHTesp dhtHabitacion2;
 DHTesp dhtHabitacion3;
 
-
-
+//------------------------------------------------------------------------------------
+// Funciones subscripción
 //------------------------------------------------------------------------------------
 void Suscribe_MQTT()
 {
   grupo6.subscribe("/actividad3/casa/");
 }
+//------------------------------------------------------------------------------------
+// Funciones reconexion
 //------------------------------------------------------------------------------------
 void Reconectar_MQTT()
 {
@@ -82,7 +80,6 @@ void Reconectar_MQTT()
     clientId += String(random(0xffff), HEX);
     if (grupo6.connect(clientId.c_str()))
     {
-
       Serial.println("Coneccion exitosa a Broker MQTT");
       Suscribe_MQTT();
     }
@@ -95,10 +92,8 @@ void Reconectar_MQTT()
     }
   }
 }
-
-
 //------------------------------------------------------------------------------------
-// Libreria de funciones Callback
+// Funciones Callback
 //------------------------------------------------------------------------------------
 void callback(char *topic, byte *payload, unsigned int length)
 { for (int i = 0; i < 3; i++)
@@ -109,7 +104,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     rx="";
 }
 //------------------------------------------------------------------------------------
-// Libreria de funciones Reconexion
+// Funciones Reconexion
 //------------------------------------------------------------------------------------
 void Conectar_MQTT()
 {
@@ -119,6 +114,8 @@ void Conectar_MQTT()
   grupo6.setCallback(callback);
 }
 //------------------------------------------------------------------------------------
+// Funciones revisa conexion
+//------------------------------------------------------------------------------------
 void Revisar_conexion_MQTT()
 {
   if (!grupo6.connected())
@@ -127,6 +124,38 @@ void Revisar_conexion_MQTT()
   }
   grupo6.loop();
 }
+
+//------------------------------------------------------------------------------------
+// Funcionespublica por mqtt datos cocina
+//------------------------------------------------------------------------------------
+void publicaCocina(){
+    TempAndHumidity  data = dhtHabitacion1.getTempAndHumidity();
+    cocina = data.temperature;               // adquirimos temperatura del DHT11
+    String cocina_2 = String(cocina,2);                      // Convierto el float a string
+    int str_len4 = cocina_2.length() + 1;               // cargo el largo del float a una variable
+    char cocina_1[str_len4];                          // cargo el largo de la temperatura en al arreglo
+    cocina_2.toCharArray(cocina_1, str_len4);             // convierto el envio3 en arreglo y del largo de temp1
+    grupo6.publish("/actividad3/cocina/temperatura/", cocina_1);     // publico en el broker el topico y el arreglo 
+    delay(100);
+
+
+    cocina = ref1;               // adquirimos temperatura del DHT11
+    cocina_2 = String(cocina,2);                      // Convierto el float a string
+    str_len4 = cocina_2.length() + 1;               // cargo el largo del float a una variable
+    cocina_1[str_len4];                          // cargo el largo de la temperatura en al arreglo
+    cocina_2.toCharArray(cocina_1, str_len4);             // convierto el envio3 en arreglo y del largo de temp1
+    grupo6.publish("/actividad3/cocina/setpoint/", cocina_1);     // publico en el broker el topico y el arreglo 
+    delay(100);
+
+    cocina = ciclo1;               // adquirimos temperatura del DHT11
+    cocina_2 = String(cocina,2);                      // Convierto el float a string
+    str_len4 = cocina_2.length() + 1;               // cargo el largo del float a una variable
+    cocina_1[str_len4];                          // cargo el largo de la temperatura en al arreglo
+    cocina_2.toCharArray(cocina_1, str_len4);             // convierto el envio3 en arreglo y del largo de temp1
+    grupo6.publish("/actividad3/cocina/pwm/", cocina_1);     // publico en el broker el topico y el arreglo 
+    delay(100);
+}
+
 
 
 
@@ -171,22 +200,16 @@ void setup()
   dhtHabitacion2.setup(DHT_Hab2, DHTesp::DHT11);
   dhtHabitacion3.setup(DHT_Hab3, DHTesp::DHT11);
   delay(2000);
-
-  
 }
 
 void loop()
 {
-
-
-
-  
-  // SENSOR 1
+   // SENSOR 1
   LCD.clear(); //borramos los datos del LCD
   LCD.setCursor(0, 0);
-  LCD.print("Habitacion 1");
+  LCD.print("Cocina ");
   //int valuPote1 = analogRead(pote1);                                       // lectura del potenciometro
-  float ref1 = pote1;// map(pote1, 0, 40, 0, 40); //mapeo el potenciometro en rando de 16 a 30
+  ref1 = pote1;// map(pote1, 0, 40, 0, 40); //mapeo el potenciometro en rando de 16 a 30
   LCD.setCursor(0, 2);
   LCD.print("Temp Set " + String(ref1));
  
@@ -199,6 +222,7 @@ void loop()
     LCD.print("Calefaccion");
     Serial.println("CALEFFACCION");
     analogWrite(canal1, U1); //"Actua calefaccion"
+    publicaCocina();
   }
 
   else // si la señal de control es menor a 0 necesito refrigeracion
@@ -211,42 +235,7 @@ void loop()
     ciclo1 = map(ciclo, 255, 0, 0,100);
     LCD.print(ciclo1); 
     LCD.print("%"); 
-
-    TempAndHumidity  data = dhtHabitacion1.getTempAndHumidity();
-    cocina = data.temperature;               // adquirimos temperatura del DHT11
-    String cocina_2 = String(cocina,2);                      // Convierto el float a string
-    int str_len4 = cocina_2.length() + 1;               // cargo el largo del float a una variable
-    char cocina_1[str_len4];                          // cargo el largo de la temperatura en al arreglo
-    cocina_2.toCharArray(cocina_1, str_len4);             // convierto el envio3 en arreglo y del largo de temp1
-    grupo6.publish("/actividad3/cocina/temperatura/", cocina_1);     // publico en el broker el topico y el arreglo 
-    delay(100);
-
-    cocina = ref1;               // adquirimos temperatura del DHT11
-    cocina_2 = String(cocina,2);                      // Convierto el float a string
-    str_len4 = cocina_2.length() + 1;               // cargo el largo del float a una variable
-    cocina_1[str_len4];                          // cargo el largo de la temperatura en al arreglo
-    cocina_2.toCharArray(cocina_1, str_len4);             // convierto el envio3 en arreglo y del largo de temp1
-    grupo6.publish("/actividad3/cocina/setpoint/", cocina_1);     // publico en el broker el topico y el arreglo 
-    delay(100);
-
-    cocina = ciclo1;               // adquirimos temperatura del DHT11
-    cocina_2 = String(cocina,2);                      // Convierto el float a string
-    str_len4 = cocina_2.length() + 1;               // cargo el largo del float a una variable
-    cocina_1[str_len4];                          // cargo el largo de la temperatura en al arreglo
-    cocina_2.toCharArray(cocina_1, str_len4);             // convierto el envio3 en arreglo y del largo de temp1
-    grupo6.publish("/actividad3/cocina/pwm/", cocina_1);     // publico en el broker el topico y el arreglo 
-    delay(100);
-
-
-
-
-
-
-
-
-
-
-
+    publicaCocina();
   }
 
 delay(1000);
